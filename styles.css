@@ -7,6 +7,24 @@ p{
     line-height: 1.4;
 }
 
+h1{
+    font-size: 18px;
+}
+
+h2, h3, p{
+    font-size: 14px;
+}
+
+.test{
+    background-color: red;
+}
+
+.between{
+    justify-content: space-between;
+    
+}
+
+
 .rounded{
     border-radius: 15px;
 }
@@ -33,13 +51,13 @@ body{
     flex-direction: column;
 }
 
-#new-entry{
+#addButton{
     cursor: pointer;
     font-size: 16px;
     line-height: 1.4;
 }
 
-#new-entry:hover{
+#addButton:hover{
     color: red;
 }
 
@@ -50,13 +68,24 @@ body{
 
 .entry{
     width: 100%;
+    gap: 2px;
     border-bottom: 1px dotted gray;
 }
 
-h1{
-    font-size: 18px;
+/* Adding Content Input Fields */
+input{
+    all:unset
 }
 
-h2{
+.input-title{
     font-size: 14px;
+    font-weight: 600;
+    width: 80%;
+    border: none;
+}
+
+.input-description{
+    font-size: 14px;
+    width: 80%;
+    border: none;
 }
