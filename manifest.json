@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Pocket Notebook",
+  "version": "1.0.0",
+  "description": "An extension that stores key-pair values locally on your device. Save words with their meanings, people with their birthdays - it's a handy pocket notebook!",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "icon.png"
+  }
+}
