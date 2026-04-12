@@ -1,10 +1,10 @@
 // Map Data Onto Entry List
 const entryList = document.getElementById("entry-list")
 
-// Structure: ID : {key:value}
-const dataset = [
-    { 1 : {"Entry 1":"Description"}},
-    { 2 : {"Entry 2":"Description"}}
+// Structure: {id, title, description}
+let dataset = [
+    { id: 1, title: "Entry 1", description:"Description"},
+    { id: 2, title: "Entry 2", description:"Description"}
 ]
 
 function MapData(dataset){
@@ -13,39 +13,48 @@ function MapData(dataset){
 
     // Use ID To Assign Each Input Field and Their Action Buttons
     dataset.map((data)=>{
-        const currentID = Object.entries(data)[0][0]
-        const currentPair = Object.entries(data)[0][1]
-        
-        
-        const [key, value] = Object.entries(currentPair)[0]
+        const currentID = data.id
+        const key = data.title
+        const value = data.description
 
         // Create New Div for Each Data 
-        const newEntry = document.createElement("div")
-        newEntry.className= "entry flex flex-col"
-        newEntry.id=currentID
+        const entry = document.createElement("div")
+        entry.className= "entry flex flex-col"
+        entry.id=currentID
 
         // As Input
-        newEntry.innerHTML=`
+        entry.innerHTML=`
         <p id="warning-title-"${currentID}" class="warning">Title is Empty!</p>
         <p id="warning-description-"${currentID}" class="warning">Description is Empty!</p>
-        <input id="input-title-${currentID}" class="input-title" type="text" placeholder="Enter Title" value="${key}"/>
+        
+        <!-- Entry Title with Garbage Icon -->
+        <div class="title-header-row flex">
+            <input id="input-title-${currentID}" class="input-title" type="text" placeholder="Enter Title" value="${key}"/>
+            <p id="trash-delete-entry-${currentID}" class="action-button">Trash</p>
+        </div>
 
         <!-- Description with Tick -->
 
         <div class="flex">
             <input id="input-description-${currentID}" class="input-description" type="text" placeholder="Enter Description" value="${value}"/>
-            <p id="tick-confirm-entry-${currentID}" class="tick-confirm-entry">/</p>
-            <p id="cross-cancel-entry-${currentID}" class="cross-cancel-entry">X</p>
+            <p id="tick-confirm-entry-${currentID}" class="action-button">/</p>
+            <p id="cross-cancel-entry-${currentID}" class="action-button">X</p>
         </div>`
 
-        entryList.appendChild(newEntry)
+        entryList.appendChild(entry)
 
         // Set Up Logic
         focusListenerForWarning(currentID)
 
         // Editing Logic Here (These Already Exist - Merely for Editing)
         const confirmButton = document.getElementById(`tick-confirm-entry-${currentID}`)
-        
+
+        // Delete Button (Filters out Item Index)
+        const deleteButton = document.getElementById(`trash-delete-entry-${currentID}`)
+        deleteButton.addEventListener("click",()=>{
+            dataset = dataset.filter(item => item.id !== currentID)
+            MapData(dataset)
+        })
     })
 }
 
@@ -77,8 +86,8 @@ addButton.addEventListener("click",()=>{
 
         <div class="flex">
             <input id="input-description-${entryID}" class="input-description" type="text" placeholder="Enter Description"/>
-            <p id="tick-confirm-entry-${entryID}" class="tick-confirm-entry">/</p>
-            <p id="cross-cancel-entry-${entryID}" class="cross-cancel-entry">X</p>
+            <p id="tick-confirm-entry-${entryID}" class="action-button">/</p>
+            <p id="cross-cancel-entry-${entryID}" class="action-button">X</p>
         </div>
     `
 
@@ -94,7 +103,7 @@ addButton.addEventListener("click",()=>{
         // Valid Entry
         if (verifyNewEntry(entryID, entryTitle, entryDescription)){            
             // Push Info In Based on Entry ID
-            dataset.push({[entryID]: {[entryTitle]: entryDescription}})
+            dataset.push({id: entryID, title: entryTitle, description: entryDescription})
             MapData(dataset)
 
             resetAddEntry(entryID)
@@ -117,7 +126,6 @@ function focusListenerForWarning(id){
 
     titleField.addEventListener("focus", ()=>{resetWarning(id)})
     descriptionField.addEventListener("focus", ()=>{resetWarning(id)})
-
 }
 
 // Check if Entry is Valid, If Not Throw Errors
@@ -164,6 +172,12 @@ function resetWarning(id){
     const warningTitle = document.getElementById(`warning-title-${id}`)
     const warningDescription = document.getElementById(`warning-description-${id}`)
 
-    warningDescription.style.display="none"
-    warningTitle.style.display="none"
+    // Only Tweak When It's Available
+    if (warningTitle){
+        warningTitle.style.display="none"
+    }
+
+    if (warningDescription){
+        warningDescription.style.display="none"
+    }
 }
