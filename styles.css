@@ -93,11 +93,11 @@ input{
     border: none;
 }
 
-#tick-confirm-entry:hover, #cross-cancel-entry:hover{
+.tick-confirm-entry:hover, .cross-cancel-entry:hover{
     cursor: pointer;
 }
 
-#tick-confirm-entry, #cross-cancel-entry{
+.tick-confirm-entry, .cross-cancel-entry{
     padding: 0px 5px;
 }
 

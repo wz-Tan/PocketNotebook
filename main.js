@@ -1,32 +1,45 @@
 // Map Data Onto Entry List
 const entryList = document.getElementById("entry-list")
 
+// Structure: ID : {key:value}
 const dataset = [
-    {"Entry 1":"Description"},
-    {"Entry 2":"Description"}
+    { 1 : {"Entry 1":"Description"}},
+    { 2 : {"Entry 2":"Description"}}
 ]
 
 function MapData(dataset){
     // Clear Out The List Before Adding In
     entryList.innerHTML=``
 
+    // Use ID To Assign Each Input Field and Their Action Buttons
     dataset.map((data)=>{
-    const newEntry = document.createElement("div")
-    newEntry.className= "entry flex flex-col"
-    
-    const [key, value] = Object.entries(data)[0]
+        const currentID = Object.entries(data)[0][0]
+        const currentPair = Object.entries(data)[0][1]
+        
+        
+        const [key, value] = Object.entries(currentPair)[0]
 
-    const keyElement = document.createElement("h3")
-    keyElement.innerText = key
+        // Create New Div for Each Data 
+        const newEntry = document.createElement("div")
+        newEntry.className= "entry flex flex-col"
+        newEntry.id=currentID
 
-    const valueElement = document.createElement("p")
-    valueElement.innerText = value
+        // As Input
+        newEntry.innerHTML=`
+        <input id="input-title-${currentID}" class="input-title" type="text" placeholder="Enter Title" value="${key}"/>
 
-    newEntry.appendChild(keyElement)
-    newEntry.appendChild(valueElement)
+        <!-- Description with Tick -->
 
-    entryList.appendChild(newEntry)
-})
+        <div class="flex">
+            <input id="input-description-${currentID}" class="input-description" type="text" placeholder="Enter Description" value="${value}"/>
+            <p id="tick-confirm-entry-${currentID}" class="tick-confirm-entry">/</p>
+            <p id="cross-cancel-entry-${currentID}" class="cross-cancel-entry">X</p>
+        </div>`
+
+        entryList.appendChild(newEntry)
+
+        // Set Up Event Listeners For Every Input Field (The Only Input Field Without ID is New Entry)
+    })
 }
 
 MapData(dataset)
@@ -53,8 +66,8 @@ addButton.addEventListener("click",()=>{
 
         <div class="flex">
             <input id="input-description" class="input-description" type="text" placeholder="Enter Description"/>
-            <p id="tick-confirm-entry">/</p>
-            <p id="cross-cancel-entry">X</p>
+            <p id="tick-confirm-entry" class="tick-confirm-entry">/</p>
+            <p id="cross-cancel-entry" class="cross-cancel-entry">X</p>
         </div>
     `
 
@@ -76,7 +89,7 @@ addButton.addEventListener("click",()=>{
         // Make Sure Not Empty
         if (verifyNewEntry(entryTitle, entryDescription)){            
             // Push Info In
-            dataset.push({[entryTitle]: entryDescription})
+            dataset.push({ 8: {[entryTitle]: entryDescription}})
             MapData(dataset)
 
             reset()
@@ -92,6 +105,10 @@ addButton.addEventListener("click",()=>{
 
 // Check if Entry is Valid, If Not Throw Errors
 function verifyNewEntry(title, description){
+    // Trim Variables
+    title = title.trim()
+    description = description.trim()
+
     // Early Exit (Both Not Empty)
     if (title && description){
         return true
