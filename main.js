@@ -7,6 +7,9 @@ const dataset = [
 ]
 
 function MapData(dataset){
+    // Clear Out The List Before Adding In
+    entryList.innerHTML=``
+
     dataset.map((data)=>{
     const newEntry = document.createElement("div")
     newEntry.className= "entry flex flex-col"
@@ -35,11 +38,49 @@ addButton.addEventListener("click",()=>{
     const entryInput = document.getElementById("entry-input")
 
     entryInput.innerHTML=`
-        <input class="input-title" type="text" placeholder="Enter Title"/>
+        <input id="input-title" class="input-title" type="text" placeholder="Enter Title"/>
         <!-- Description with Tick -->
-        <div class="flex between">
-            <input class="input-description" type="text" placeholder="Enter Description"/>
+        <div class="flex">
+            <input id="input-description" class="input-description" type="text" placeholder="Enter Description"/>
             <p id="tick-confirm-entry">/</p>
         </div>
     `
+
+    // User Adds Entry
+    const confirmButton = document.getElementById("tick-confirm-entry")
+    confirmButton.addEventListener("click",()=>{
+
+        // Acquire Field Input
+        const entryTitle = document.getElementById("input-title").value
+        const entryDescription = document.getElementById("input-description").value
+
+        // Make Sure Not Empty
+        if (verifyNewEntry(entryTitle, entryDescription)){
+            console.log("Entry Title is", entryTitle)
+            
+            // Push Info In
+            dataset.push({[entryTitle]: entryDescription})
+            MapData(dataset)
+            entryInput.innerHTML=``
+        }
+
+        else{
+            console.log('Invalid entry')
+        }
+    })
 })
+
+function verifyNewEntry(title, description){
+    if (!title){
+        console.log("Title is empty!")
+        return false
+    }
+
+    if (!description){
+        console.log("Description is empty!")
+        return false
+    }
+
+    // All Checks Pass
+    return true
+}

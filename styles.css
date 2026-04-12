@@ -20,8 +20,11 @@ h2, h3, p{
 }
 
 .between{
-    justify-content: space-between;
-    
+    justify-content: space-between;   
+}
+
+.around{
+    justify-content: space-around;
 }
 
 
@@ -79,7 +82,7 @@ input{
 
 .input-title{
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     width: 80%;
     border: none;
 }
@@ -88,4 +91,12 @@ input{
     font-size: 14px;
     width: 80%;
     border: none;
+}
+
+#tick-confirm-entry:hover{
+    cursor: pointer;
+}
+
+#tick-confirm-entry{
+    padding: 0px 5px;
 }
