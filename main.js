@@ -31,9 +31,12 @@ function MapData(dataset){
 
 MapData(dataset)
 
-// Adding New Entry
+// Adding New Entry (Spawn Input Boxes and OK and Cancel)
 const addButton = document.getElementById("addButton")
 addButton.addEventListener("click",()=>{
+    // Remove Add New Entry Button 
+    addButton.style.display="none"
+
     // Creating the Input Fields Once Clicked
     const entryInput = document.getElementById("entry-input")
 
@@ -43,13 +46,13 @@ addButton.addEventListener("click",()=>{
         <div class="flex">
             <input id="input-description" class="input-description" type="text" placeholder="Enter Description"/>
             <p id="tick-confirm-entry">/</p>
+            <p id="cross-cancel-entry">X</p>
         </div>
     `
 
     // User Adds Entry
     const confirmButton = document.getElementById("tick-confirm-entry")
     confirmButton.addEventListener("click",()=>{
-
         // Acquire Field Input
         const entryTitle = document.getElementById("input-title").value
         const entryDescription = document.getElementById("input-description").value
@@ -62,11 +65,24 @@ addButton.addEventListener("click",()=>{
             dataset.push({[entryTitle]: entryDescription})
             MapData(dataset)
             entryInput.innerHTML=``
+
+            // Add Back Button
+            addButton.style.display="block"
         }
 
         else{
             console.log('Invalid entry')
         }
+    })
+
+    // User Cancels Entry
+    const cancelButton = document.getElementById("cross-cancel-entry")
+    cancelButton.addEventListener("click",()=>{
+        // Reset Input Fields
+        entryInput.innerHTML=``
+
+        // Show Add New Entry Button Again
+        addButton.style.display="block"
     })
 })
 
