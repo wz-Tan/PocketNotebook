@@ -26,6 +26,8 @@ function MapData(dataset){
 
         // As Input
         newEntry.innerHTML=`
+        <p id="warning-title-"${currentID}" class="warning">Title is Empty!</p>
+        <p id="warning-description-"${currentID}" class="warning">Description is Empty!</p>
         <input id="input-title-${currentID}" class="input-title" type="text" placeholder="Enter Title" value="${key}"/>
 
         <!-- Description with Tick -->
@@ -39,6 +41,7 @@ function MapData(dataset){
         entryList.appendChild(newEntry)
 
         // Set Up Event Listeners For Every Input Field (The Only Input Field Without ID is New Entry)
+
     })
 }
 
@@ -46,7 +49,11 @@ MapData(dataset)
 
 // Adding New Entry (Spawn Input Boxes and OK and Cancel)
 const addButton = document.getElementById("addButton")
+
 addButton.addEventListener("click",()=>{
+
+    // Assign ID 0 for New Entry (TODO: Generate a Unique One Instead)
+    const entryID = 0;
 
     // Remove Add New Entry Button 
     addButton.style.display="none"
@@ -57,54 +64,54 @@ addButton.addEventListener("click",()=>{
     // Add Input Fields and Warning
     entryInput.innerHTML=`
         <!-- Warning -->
-        <p id="warning-title" class="warning">Title is Empty!</p>
-        <p id="warning-description" class="warning">Description is Empty!</p>
+        <p id="warning-title-${entryID}" class="warning">Title is Empty!</p>
+        <p id="warning-description-${entryID}" class="warning">Description is Empty!</p>
 
-        <input id="input-title" class="input-title" type="text" placeholder="Enter Title"/>
+        <input id="input-title-${entryID}" class="input-title" type="text" placeholder="Enter Title"/>
 
         <!-- Description with Tick -->
 
         <div class="flex">
-            <input id="input-description" class="input-description" type="text" placeholder="Enter Description"/>
-            <p id="tick-confirm-entry" class="tick-confirm-entry">/</p>
-            <p id="cross-cancel-entry" class="cross-cancel-entry">X</p>
+            <input id="input-description-${entryID}" class="input-description" type="text" placeholder="Enter Description"/>
+            <p id="tick-confirm-entry-${entryID}" class="tick-confirm-entry">/</p>
+            <p id="cross-cancel-entry-${entryID}" class="cross-cancel-entry">X</p>
         </div>
     `
 
     // Input Field Focus Events Cancel Out Warning
-    const titleField = document.getElementById("input-title")
-    const descriptionField = document.getElementById("input-description")
+    const titleField = document.getElementById(`input-title-${entryID}`)
+    const descriptionField = document.getElementById(`input-description-${entryID}`)
 
     titleField.addEventListener("focus", resetWarning)
     descriptionField.addEventListener("focus", resetWarning)
 
 
     // User Adds Entry
-    const confirmButton = document.getElementById("tick-confirm-entry")
+    const confirmButton = document.getElementById(`tick-confirm-entry-${entryID}`)
     confirmButton.addEventListener("click",()=>{
         // Acquire Field Input
-        const entryTitle = document.getElementById("input-title").value
-        const entryDescription = document.getElementById("input-description").value
+        const entryTitle = document.getElementById(`input-title-${entryID}`).value
+        const entryDescription = document.getElementById(`input-description-${entryID}`).value
 
         // Make Sure Not Empty
-        if (verifyNewEntry(entryTitle, entryDescription)){            
-            // Push Info In
-            dataset.push({ 8: {[entryTitle]: entryDescription}})
+        if (verifyNewEntry(entryID, entryTitle, entryDescription)){            
+            // Push Info In Based on Entry ID
+            dataset.push({[entryID]: {[entryTitle]: entryDescription}})
             MapData(dataset)
 
-            reset()
+            resetAddEntry(entryID)
         }
     })
 
     // User Cancels Entry
-    const cancelButton = document.getElementById("cross-cancel-entry")
+    const cancelButton = document.getElementById(`cross-cancel-entry-${entryID}`)
     cancelButton.addEventListener("click",()=>{
-        reset()
+        resetAddEntry(entryID)
     })
 })
 
 // Check if Entry is Valid, If Not Throw Errors
-function verifyNewEntry(title, description){
+function verifyNewEntry(id, title, description){
     // Trim Variables
     title = title.trim()
     description = description.trim()
@@ -114,8 +121,8 @@ function verifyNewEntry(title, description){
         return true
     }
 
-    const warningTitle = document.getElementById("warning-title")
-    const warningDescription = document.getElementById("warning-description")
+    const warningTitle = document.getElementById(`warning-title-${id}`)
+    const warningDescription = document.getElementById(`warning-description-${id}`)
 
     if (!title){
         warningTitle.style.display="block"
@@ -129,9 +136,9 @@ function verifyNewEntry(title, description){
 }
 
 // After Adding Entry or Cancel New Entry
-function reset(){
+function resetAddEntry(id){
     // Definitely Reset Warning on Click
-    resetWarning()
+    resetWarning(id)
 
     const entryInput = document.getElementById("entry-input")
 
@@ -143,9 +150,10 @@ function reset(){
 }
 
 // Input Warning Resets
-function resetWarning(){
-    const warningTitle = document.getElementById("warning-title")
-    const warningDescription = document.getElementById("warning-description")
+function resetWarning(id){
+    const warningTitle = document.getElementById(`warning-title-${id}`)
+    const warningDescription = document.getElementById(`warning-description-${id}`)
+    console.log("Warning title and description is", warningTitle, warningDescription)
 
     warningDescription.style.display="none"
     warningTitle.style.display="none"
