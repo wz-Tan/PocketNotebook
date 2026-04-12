@@ -40,8 +40,12 @@ function MapData(dataset){
 
         entryList.appendChild(newEntry)
 
-        // Set Up Event Listeners For Every Input Field (The Only Input Field Without ID is New Entry)
+        // Set Up Logic
+        focusListenerForWarning(currentID)
 
+        // Editing Logic Here (These Already Exist - Merely for Editing)
+        const confirmButton = document.getElementById(`tick-confirm-entry-${currentID}`)
+        
     })
 }
 
@@ -78,13 +82,7 @@ addButton.addEventListener("click",()=>{
         </div>
     `
 
-    // Input Field Focus Events Cancel Out Warning
-    const titleField = document.getElementById(`input-title-${entryID}`)
-    const descriptionField = document.getElementById(`input-description-${entryID}`)
-
-    titleField.addEventListener("focus", resetWarning)
-    descriptionField.addEventListener("focus", resetWarning)
-
+    focusListenerForWarning(entryID)
 
     // User Adds Entry
     const confirmButton = document.getElementById(`tick-confirm-entry-${entryID}`)
@@ -93,7 +91,7 @@ addButton.addEventListener("click",()=>{
         const entryTitle = document.getElementById(`input-title-${entryID}`).value
         const entryDescription = document.getElementById(`input-description-${entryID}`).value
 
-        // Make Sure Not Empty
+        // Valid Entry
         if (verifyNewEntry(entryID, entryTitle, entryDescription)){            
             // Push Info In Based on Entry ID
             dataset.push({[entryID]: {[entryTitle]: entryDescription}})
@@ -109,6 +107,18 @@ addButton.addEventListener("click",()=>{
         resetAddEntry(entryID)
     })
 })
+
+// Handles Focusing and Warning Logic
+function focusListenerForWarning(id){
+
+    // Input Field Focus Events Cancel Out Warning
+    const titleField = document.getElementById(`input-title-${id}`)
+    const descriptionField = document.getElementById(`input-description-${id}`)
+
+    titleField.addEventListener("focus", ()=>{resetWarning(id)})
+    descriptionField.addEventListener("focus", ()=>{resetWarning(id)})
+
+}
 
 // Check if Entry is Valid, If Not Throw Errors
 function verifyNewEntry(id, title, description){
@@ -153,7 +163,6 @@ function resetAddEntry(id){
 function resetWarning(id){
     const warningTitle = document.getElementById(`warning-title-${id}`)
     const warningDescription = document.getElementById(`warning-description-${id}`)
-    console.log("Warning title and description is", warningTitle, warningDescription)
 
     warningDescription.style.display="none"
     warningTitle.style.display="none"
