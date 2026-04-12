@@ -34,21 +34,37 @@ MapData(dataset)
 // Adding New Entry (Spawn Input Boxes and OK and Cancel)
 const addButton = document.getElementById("addButton")
 addButton.addEventListener("click",()=>{
+
     // Remove Add New Entry Button 
     addButton.style.display="none"
 
     // Creating the Input Fields Once Clicked
     const entryInput = document.getElementById("entry-input")
 
+    // Add Input Fields and Warning
     entryInput.innerHTML=`
+        <!-- Warning -->
+        <p id="warning-title" class="warning">Title is Empty!</p>
+        <p id="warning-description" class="warning">Description is Empty!</p>
+
         <input id="input-title" class="input-title" type="text" placeholder="Enter Title"/>
+
         <!-- Description with Tick -->
+
         <div class="flex">
             <input id="input-description" class="input-description" type="text" placeholder="Enter Description"/>
             <p id="tick-confirm-entry">/</p>
             <p id="cross-cancel-entry">X</p>
         </div>
     `
+
+    // Input Field Focus Events Cancel Out Warning
+    const titleField = document.getElementById("input-title")
+    const descriptionField = document.getElementById("input-description")
+
+    titleField.addEventListener("focus", resetWarning)
+    descriptionField.addEventListener("focus", resetWarning)
+
 
     // User Adds Entry
     const confirmButton = document.getElementById("tick-confirm-entry")
@@ -58,45 +74,62 @@ addButton.addEventListener("click",()=>{
         const entryDescription = document.getElementById("input-description").value
 
         // Make Sure Not Empty
-        if (verifyNewEntry(entryTitle, entryDescription)){
-            console.log("Entry Title is", entryTitle)
-            
+        if (verifyNewEntry(entryTitle, entryDescription)){            
             // Push Info In
             dataset.push({[entryTitle]: entryDescription})
             MapData(dataset)
-            entryInput.innerHTML=``
 
-            // Add Back Button
-            addButton.style.display="block"
-        }
-
-        else{
-            console.log('Invalid entry')
+            reset()
         }
     })
 
     // User Cancels Entry
     const cancelButton = document.getElementById("cross-cancel-entry")
     cancelButton.addEventListener("click",()=>{
-        // Reset Input Fields
-        entryInput.innerHTML=``
-
-        // Show Add New Entry Button Again
-        addButton.style.display="block"
+        reset()
     })
 })
 
+// Check if Entry is Valid, If Not Throw Errors
 function verifyNewEntry(title, description){
+    // Early Exit (Both Not Empty)
+    if (title && description){
+        return true
+    }
+
+    const warningTitle = document.getElementById("warning-title")
+    const warningDescription = document.getElementById("warning-description")
+
     if (!title){
-        console.log("Title is empty!")
-        return false
+        warningTitle.style.display="block"
     }
 
     if (!description){
-        console.log("Description is empty!")
-        return false
+        warningDescription.style.display="block"
     }
 
-    // All Checks Pass
-    return true
+    return false
+}
+
+// After Adding Entry or Cancel New Entry
+function reset(){
+    // Definitely Reset Warning on Click
+    resetWarning()
+
+    const entryInput = document.getElementById("entry-input")
+
+    // Reset Input Fields
+    entryInput.innerHTML=``
+
+    // Show Add New Entry Button Again
+    addButton.style.display="block"
+}
+
+// Input Warning Resets
+function resetWarning(){
+    const warningTitle = document.getElementById("warning-title")
+    const warningDescription = document.getElementById("warning-description")
+
+    warningDescription.style.display="none"
+    warningTitle.style.display="none"
 }
