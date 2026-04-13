@@ -181,10 +181,11 @@ function handleInputFocused(id) {
 
     // Reset Warning, And Show Confirm and Cancel on Focus
     titleField.addEventListener("focus", () => {
+
         // On New Target
         if (currentFocus !== id) {
             // If There Was A Target Before This, Reset It
-            if (currentFocus) {
+            if (!isNaN(currentFocus)) {
                 resetPreviousEditTarget(currentFocus)
             }
 
@@ -202,10 +203,11 @@ function handleInputFocused(id) {
     });
 
     descriptionField.addEventListener("focus", () => {
+
         // On New Target
         if (currentFocus !== id) {
             // If There Was A Target Before This, Reset It
-            if (currentFocus) {
+            if (!isNaN(currentFocus)) {
                 resetPreviousEditTarget(currentFocus)
             }
 
@@ -297,6 +299,7 @@ function showActionButtons(id) {
 
 // Reset The Previously Focused Item (Action Bar and Errors) - Reset Description and Title unless its a new Entry
 function resetPreviousEditTarget(id) {
+    console.log("The previous target ID is, ", id)
 
     const confirmButton = document.getElementById(`tick-confirm-entry-${id}`);
     const cancelButton = document.getElementById(`cross-cancel-entry-${id}`);
