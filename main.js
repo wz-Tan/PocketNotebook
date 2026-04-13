@@ -1,29 +1,32 @@
 // Map Data Onto Entry List
-const entryList = document.getElementById("entry-list")
+const entryList = document.getElementById("entry-list");
 
 // Structure: {id, title, description}
 let dataset = [
-    { id: 1, title: "Entry 1", description:"Description"},
-    { id: 2, title: "Entry 2", description:"Description"}
-]
+    { id: 1, title: "Entry 1", description: "Description" },
+    { id: 2, title: "Entry 2", description: "Description" },
+];
 
-function MapData(dataset){
+// Currently Focused Element (Eliminate Others Who Are Not Focused)
+let currentFocus = undefined;
+
+function MapData(dataset) {
     // Clear Out The List Before Adding In
-    entryList.innerHTML=``
+    entryList.innerHTML = ``;
 
     // Use ID To Assign Each Input Field and Their Action Buttons
-    dataset.map((data)=>{
-        const currentID = data.id
-        const key = data.title
-        const value = data.description
+    dataset.map((data) => {
+        const currentID = data.id;
+        const key = data.title;
+        const value = data.description;
 
-        // Create New Div for Each Data 
-        const entry = document.createElement("div")
-        entry.className= "entry flex flex-col"
-        entry.id=currentID
+        // Create New Div for Each Data
+        const entry = document.createElement("div");
+        entry.className = "entry flex flex-col";
+        entry.id = currentID;
 
         // As Input
-        entry.innerHTML=`
+        entry.innerHTML = `
         <p id="warning-title-"${currentID}" class="warning">Title is Empty!</p>
         <p id="warning-description-"${currentID}" class="warning">Description is Empty!</p>
         
@@ -37,45 +40,53 @@ function MapData(dataset){
 
         <div class="flex">
             <input id="input-description-${currentID}" class="input-description" type="text" placeholder="Enter Description" value="${value}"/>
-            <p id="tick-confirm-entry-${currentID}" class="action-button">/</p>
-            <p id="cross-cancel-entry-${currentID}" class="action-button">X</p>
-        </div>`
+            <p id="tick-confirm-entry-${currentID}" class="action-button-hidden">/</p>
+            <p id="cross-cancel-entry-${currentID}" class="action-button-hidden">X</p>
+        </div>`;
 
-        entryList.appendChild(entry)
+        entryList.appendChild(entry);
 
-        // Set Up Logic
-        focusListenerForWarning(currentID)
-
-        // Editing Logic Here (These Already Exist - Merely for Editing)
-        const confirmButton = document.getElementById(`tick-confirm-entry-${currentID}`)
+        // Set Up UI Logic
+        // Hide Warning, Show Action Button Once Focused
+        onInputFocused(currentID);
 
         // Delete Button (Filters out Item Index)
-        const deleteButton = document.getElementById(`trash-delete-entry-${currentID}`)
-        deleteButton.addEventListener("click",()=>{
-            dataset = dataset.filter(item => item.id !== currentID)
-            MapData(dataset)
-        })
-    })
+        const deleteButton = document.getElementById(
+            `trash-delete-entry-${currentID}`,
+        );
+        deleteButton.addEventListener("click", () => {
+            dataset = dataset.filter((item) => item.id !== currentID);
+            MapData(dataset);
+        });
+
+        // Editing Logic
+    });
 }
 
-MapData(dataset)
+MapData(dataset);
 
 // Adding New Entry (Spawn Input Boxes and OK and Cancel)
-const addButton = document.getElementById("addButton")
+const addButton = document.getElementById("addButton");
 
-addButton.addEventListener("click",()=>{
-
+addButton.addEventListener("click", () => {
     // Assign ID 0 for New Entry (TODO: Generate a Unique One Instead)
     const entryID = 0;
 
-    // Remove Add New Entry Button 
-    addButton.style.display="none"
+    // Reset the Buttons and Warnings on A Prior Edit (If Any)
+    if (currentFocus !== undefined && currentFocus !== entryID) {
+        resetPreviousEditTarget(currentFocus)
+    }
+
+    currentFocus = entryID
+
+    // Remove Add New Entry Button
+    addButton.style.display = "none";
 
     // Creating the Input Fields Once Clicked
-    const entryInput = document.getElementById("entry-input")
+    const entryInput = document.getElementById("entry-input");
 
     // Add Input Fields and Warning
-    entryInput.innerHTML=`
+    entryInput.innerHTML = `
         <!-- Warning -->
         <p id="warning-title-${entryID}" class="warning">Title is Empty!</p>
         <p id="warning-description-${entryID}" class="warning">Description is Empty!</p>
@@ -86,98 +97,169 @@ addButton.addEventListener("click",()=>{
 
         <div class="flex">
             <input id="input-description-${entryID}" class="input-description" type="text" placeholder="Enter Description"/>
-            <p id="tick-confirm-entry-${entryID}" class="action-button">/</p>
-            <p id="cross-cancel-entry-${entryID}" class="action-button">X</p>
+            <p id="tick-confirm-entry-${entryID}" class="action-button-shown">/</p>
+            <p id="cross-cancel-entry-${entryID}" class="action-button-shown">X</p>
         </div>
-    `
+    `;
 
-    focusListenerForWarning(entryID)
+    onInputFocused(entryID);
 
     // User Adds Entry
-    const confirmButton = document.getElementById(`tick-confirm-entry-${entryID}`)
-    confirmButton.addEventListener("click",()=>{
+    const confirmButton = document.getElementById(
+        `tick-confirm-entry-${entryID}`,
+    );
+    confirmButton.addEventListener("click", () => {
         // Acquire Field Input
-        const entryTitle = document.getElementById(`input-title-${entryID}`).value
-        const entryDescription = document.getElementById(`input-description-${entryID}`).value
+        const entryTitle = document.getElementById(`input-title-${entryID}`).value;
+        const entryDescription = document.getElementById(
+            `input-description-${entryID}`,
+        ).value;
 
         // Valid Entry
-        if (verifyNewEntry(entryID, entryTitle, entryDescription)){            
+        if (verifyNewEntry(entryID, entryTitle, entryDescription)) {
             // Push Info In Based on Entry ID
-            dataset.push({id: entryID, title: entryTitle, description: entryDescription})
-            MapData(dataset)
+            dataset.push({
+                id: entryID,
+                title: entryTitle,
+                description: entryDescription,
+            });
+            MapData(dataset);
 
-            resetAddEntry(entryID)
+            resetAddEntry(entryID);
         }
-    })
+    });
 
     // User Cancels Entry
-    const cancelButton = document.getElementById(`cross-cancel-entry-${entryID}`)
-    cancelButton.addEventListener("click",()=>{
-        resetAddEntry(entryID)
-    })
-})
+    const cancelButton = document.getElementById(`cross-cancel-entry-${entryID}`);
+    cancelButton.addEventListener("click", () => {
+        resetAddEntry(entryID);
+    });
+});
 
-// Handles Focusing and Warning Logic
-function focusListenerForWarning(id){
+// Hides Warning, Shows Tick and Cross for Editing
+function onInputFocused(id) {
 
     // Input Field Focus Events Cancel Out Warning
-    const titleField = document.getElementById(`input-title-${id}`)
-    const descriptionField = document.getElementById(`input-description-${id}`)
+    const titleField = document.getElementById(`input-title-${id}`);
+    const descriptionField = document.getElementById(`input-description-${id}`);
 
-    titleField.addEventListener("focus", ()=>{resetWarning(id)})
-    descriptionField.addEventListener("focus", ()=>{resetWarning(id)})
+    // Reset Warning, And Show Confirm and Cancel on Focus
+    titleField.addEventListener("focus", () => {
+
+        // Reset Effects on The Previous Input Field
+        if (currentFocus !== undefined && currentFocus !== id) {
+            resetPreviousEditTarget(currentFocus)
+        }
+
+        resetWarning(id);
+        showActionButtons(id);
+
+        // Set Focused Element
+        currentFocus = id;
+    });
+
+    descriptionField.addEventListener("focus", () => {
+
+        // Reset Effects on The Previous Input Field
+        if (currentFocus !== undefined && currentFocus !== id) {
+            resetPreviousEditTarget(currentFocus)
+        }
+
+        resetWarning(id);
+        showActionButtons(id);
+
+        // Set Focused Element
+        currentFocus = id;
+    });
 }
 
 // Check if Entry is Valid, If Not Throw Errors
-function verifyNewEntry(id, title, description){
+function verifyNewEntry(id, title, description) {
     // Trim Variables
-    title = title.trim()
-    description = description.trim()
+    title = title.trim();
+    description = description.trim();
 
     // Early Exit (Both Not Empty)
-    if (title && description){
-        return true
+    if (title && description) {
+        return true;
     }
 
-    const warningTitle = document.getElementById(`warning-title-${id}`)
-    const warningDescription = document.getElementById(`warning-description-${id}`)
+    const warningTitle = document.getElementById(`warning-title-${id}`);
+    const warningDescription = document.getElementById(
+        `warning-description-${id}`,
+    );
 
-    if (!title){
-        warningTitle.style.display="block"
+    if (!title) {
+        warningTitle.style.display = "block";
     }
 
-    if (!description){
-        warningDescription.style.display="block"
+    if (!description) {
+        warningDescription.style.display = "block";
     }
 
-    return false
+    return false;
 }
 
 // After Adding Entry or Cancel New Entry
-function resetAddEntry(id){
+function resetAddEntry(id) {
     // Definitely Reset Warning on Click
-    resetWarning(id)
+    resetWarning(id);
 
-    const entryInput = document.getElementById("entry-input")
+    const entryInput = document.getElementById("entry-input");
 
     // Reset Input Fields
-    entryInput.innerHTML=``
+    entryInput.innerHTML = ``;
 
     // Show Add New Entry Button Again
-    addButton.style.display="block"
+    addButton.style.display = "block";
 }
 
 // Input Warning Resets
-function resetWarning(id){
-    const warningTitle = document.getElementById(`warning-title-${id}`)
-    const warningDescription = document.getElementById(`warning-description-${id}`)
+function resetWarning(id) {
+    const warningTitle = document.getElementById(`warning-title-${id}`);
+    const warningDescription = document.getElementById(
+        `warning-description-${id}`,
+    );
 
     // Only Tweak When It's Available
-    if (warningTitle){
-        warningTitle.style.display="none"
+    if (warningTitle) {
+        warningTitle.style.display = "none";
     }
 
-    if (warningDescription){
-        warningDescription.style.display="none"
+    if (warningDescription) {
+        warningDescription.style.display = "none";
     }
+}
+
+// On Edits
+function showActionButtons(id) {
+    const confirmButton = document.getElementById(`tick-confirm-entry-${id}`);
+    const cancelButton = document.getElementById(`cross-cancel-entry-${id}`);
+
+    if (confirmButton){
+        confirmButton.style.visibility = "visible";
+    }
+
+    if (cancelButton){
+        cancelButton.style.visibility = "visible";
+    }
+    
+    
+}
+
+// Reset The Previously Focused Item (Action Bar and Errors)
+function resetPreviousEditTarget(id) {
+
+    const confirmButton = document.getElementById(`tick-confirm-entry-${id}`);
+    const cancelButton = document.getElementById(`cross-cancel-entry-${id}`);
+
+    if (confirmButton) {
+        confirmButton.style.visibility = "hidden";
+    }
+
+    if (cancelButton) {
+        cancelButton.style.visibility = "hidden";
+    }
+
+    resetWarning(id)
 }

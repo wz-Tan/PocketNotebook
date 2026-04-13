@@ -89,13 +89,17 @@ input{
     border: none;
 }
 
-.action-button:hover{
+.action-button-shown:hover,.action-button-hidden:hover{
     cursor: pointer;
     color: red;
 }
 
-.action-button{
+.action-button-shown, .action-button-hidden{
     padding: 0px 5px;
+}
+
+.action-button-hidden{
+    visibility:hidden;
 }
 
 .warning{
