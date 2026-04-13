@@ -9,8 +9,9 @@ let dataset = [
 
 // Currently Focused Element (Eliminate Others Who Are Not Focused)
 let currentFocus = undefined;
-let currentTitle = undefined;
-let currentDescription = undefined;
+let currentTitle = "";
+let currentDescription = "";
+let newEntryID = null;
 
 function MapData(provided_dataset) {
     // Clear Out The List Before Adding In
@@ -60,6 +61,7 @@ function MapData(provided_dataset) {
         deleteButton.addEventListener("click", () => {
             dataset = provided_dataset.filter((item) => item.id !== currentID);
             MapData(dataset);
+            currentFocus = undefined
         });
 
         // Editing Logic
@@ -83,6 +85,9 @@ function MapData(provided_dataset) {
                 // Reset And Remap
                 resetPreviousEditTarget(currentID)
                 MapData(dataset)
+
+                // On Succesful Save, We Reset The Cycle
+                currentFocus = undefined
             }
         })
 
@@ -97,13 +102,16 @@ const addButton = document.getElementById("addButton");
 addButton.addEventListener("click", () => {
     // Assign ID 0 for New Entry (TODO: Generate a Unique One Instead)
     const entryID = 0;
+    newEntryID = entryID;
 
-    // Reset the Buttons and Warnings on A Prior Edit (If Any)
+    // Reset the Text, Buttons, Warnings on A Prior Edit (If Any)
     if (currentFocus !== undefined && currentFocus !== entryID) {
         resetPreviousEditTarget(currentFocus)
     }
 
     currentFocus = entryID
+    currentTitle = null
+    currentDescription = null
 
     // Remove Add New Entry Button
     addButton.style.display = "none";
@@ -173,12 +181,19 @@ function handleInputFocused(id) {
 
     // Reset Warning, And Show Confirm and Cancel on Focus
     titleField.addEventListener("focus", () => {
+        // On New Target
+        if (currentFocus !== id) {
+            // If There Was A Target Before This, Reset It
+            if (currentFocus) {
+                resetPreviousEditTarget(currentFocus)
+            }
 
-        // Reset Effects on The Previous Input Field
-        if (currentFocus !== undefined && currentFocus !== id) {
-            resetPreviousEditTarget(currentFocus)
+            // Initialise Values
+            currentTitle = titleField.value
+            currentDescription = descriptionField.value
         }
 
+        // Reset Own Warning, Show Own Action Buttons
         resetWarning(id);
         showActionButtons(id);
 
@@ -187,12 +202,19 @@ function handleInputFocused(id) {
     });
 
     descriptionField.addEventListener("focus", () => {
+        // On New Target
+        if (currentFocus !== id) {
+            // If There Was A Target Before This, Reset It
+            if (currentFocus) {
+                resetPreviousEditTarget(currentFocus)
+            }
 
-        // Reset Effects on The Previous Input Field
-        if (currentFocus !== undefined && currentFocus !== id) {
-            resetPreviousEditTarget(currentFocus)
+            // Initialise Values
+            currentTitle = titleField.value
+            currentDescription = descriptionField.value
         }
 
+        // Reset Own Warning, Show Own Action Buttons
         resetWarning(id);
         showActionButtons(id);
 
@@ -273,11 +295,21 @@ function showActionButtons(id) {
     }
 }
 
-// Reset The Previously Focused Item (Action Bar and Errors)
+// Reset The Previously Focused Item (Action Bar and Errors) - Reset Description and Title unless its a new Entry
 function resetPreviousEditTarget(id) {
 
     const confirmButton = document.getElementById(`tick-confirm-entry-${id}`);
     const cancelButton = document.getElementById(`cross-cancel-entry-${id}`);
+
+    // If the previous focus is newEntry We Dont Have To Revert
+    if (newEntryID !== id) {
+        const titleEntry = document.getElementById(`input-title-${id}`)
+        const descriptionEntry = document.getElementById(`input-description-${id}`)
+
+        titleEntry.value = currentTitle
+        descriptionEntry.value = currentDescription
+    }
+
 
     if (confirmButton) {
         confirmButton.style.visibility = "hidden";
