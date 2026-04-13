@@ -9,13 +9,15 @@ let dataset = [
 
 // Currently Focused Element (Eliminate Others Who Are Not Focused)
 let currentFocus = undefined;
+let currentTitle = undefined;
+let currentDescription = undefined;
 
-function MapData(dataset) {
+function MapData(provided_dataset) {
     // Clear Out The List Before Adding In
     entryList.innerHTML = ``;
 
     // Use ID To Assign Each Input Field and Their Action Buttons
-    dataset.map((data) => {
+    provided_dataset.map((data, index) => {
         const currentID = data.id;
         const key = data.title;
         const value = data.description;
@@ -48,18 +50,42 @@ function MapData(dataset) {
 
         // Set Up UI Logic
         // Hide Warning, Show Action Button Once Focused
-        onInputFocused(currentID);
+        handleInputFocused(currentID);
 
         // Delete Button (Filters out Item Index)
         const deleteButton = document.getElementById(
             `trash-delete-entry-${currentID}`,
         );
+
         deleteButton.addEventListener("click", () => {
-            dataset = dataset.filter((item) => item.id !== currentID);
+            dataset = provided_dataset.filter((item) => item.id !== currentID);
             MapData(dataset);
         });
 
         // Editing Logic
+        // Cancel Edit
+        const cancelButton = document.getElementById(`cross-cancel-entry-${currentID}`)
+        cancelButton.addEventListener("click", () => {
+            resetPreviousEditTarget(currentID)
+        })
+
+        // Confirm Edit
+        const confirmButton = document.getElementById(`tick-confirm-entry-${currentID}`)
+
+        confirmButton.addEventListener("click", () => {
+            const newTitle = document.getElementById(`input-title-${currentID}`).value
+            const newDescription = document.getElementById(`input-description-${currentID}`).value
+
+            // Both Not Empty (Edit Valid) - Or Else We Just Ignore Really
+            if (verifyNewEntry(currentID, newTitle, newDescription)) {
+                dataset[index] = { id: currentID, title: newTitle, description: newDescription }
+
+                // Reset And Remap
+                resetPreviousEditTarget(currentID)
+                MapData(dataset)
+            }
+        })
+
     });
 }
 
@@ -102,7 +128,7 @@ addButton.addEventListener("click", () => {
         </div>
     `;
 
-    onInputFocused(entryID);
+    handleInputFocused(entryID);
 
     // User Adds Entry
     const confirmButton = document.getElementById(
@@ -117,12 +143,14 @@ addButton.addEventListener("click", () => {
 
         // Valid Entry
         if (verifyNewEntry(entryID, entryTitle, entryDescription)) {
+
             // Push Info In Based on Entry ID
             dataset.push({
                 id: entryID,
                 title: entryTitle,
                 description: entryDescription,
             });
+
             MapData(dataset);
 
             resetAddEntry(entryID);
@@ -137,7 +165,7 @@ addButton.addEventListener("click", () => {
 });
 
 // Hides Warning, Shows Tick and Cross for Editing
-function onInputFocused(id) {
+function handleInputFocused(id) {
 
     // Input Field Focus Events Cancel Out Warning
     const titleField = document.getElementById(`input-title-${id}`);
@@ -236,15 +264,13 @@ function showActionButtons(id) {
     const confirmButton = document.getElementById(`tick-confirm-entry-${id}`);
     const cancelButton = document.getElementById(`cross-cancel-entry-${id}`);
 
-    if (confirmButton){
+    if (confirmButton) {
         confirmButton.style.visibility = "visible";
     }
 
-    if (cancelButton){
+    if (cancelButton) {
         cancelButton.style.visibility = "visible";
     }
-    
-    
 }
 
 // Reset The Previously Focused Item (Action Bar and Errors)
