@@ -32,8 +32,8 @@ async function MapData() {
         <!-- Entry Title with Garbage Icon -->
         <div class="title-header-row flex">
             <input id="input-title-${currentID}" class="input-title" type="text" placeholder="Enter Title" value="${key}"/>
-            <div id="trash-delete-entry-${currentID}" class="delete-button-div">
-                <img class="delete-img" src="delete.png"/>
+            <div id="trash-delete-entry-${currentID}" class="action-button-div">
+                <img class="action-img" src="delete.png"/>
             </div>
         </div>
 
@@ -41,8 +41,14 @@ async function MapData() {
 
         <div class="flex">
             <input id="input-description-${currentID}" class="input-description" type="text" placeholder="Enter Description" value="${value}"/>
-            <p id="tick-confirm-entry-${currentID}" class="action-button-hidden">/</p>
-            <p id="cross-cancel-entry-${currentID}" class="action-button-hidden">X</p>
+            <div id="tick-confirm-entry-${currentID}" class="action-button-div action-button-hidden">
+                <img class="action-img" src="tick.png"/>
+            </div>
+
+            <div id="cross-cancel-entry-${currentID}" class="cross-button-div action-button-hidden">
+                <img class="action-img" src="cancel.png"/>
+            </div>
+
         </div>`;
 
         entryList.appendChild(entry);
@@ -139,8 +145,13 @@ addButton.addEventListener("click", async () => {
 
         <div class="flex">
             <input id="input-description-${entryID}" class="input-description" type="text" placeholder="Enter Description"/>
-            <p id="tick-confirm-entry-${entryID}" class="action-button-shown">/</p>
-            <p id="cross-cancel-entry-${entryID}" class="action-button-shown">X</p>
+            <div id="tick-confirm-entry-${entryID}" class="action-button-div action-button-hidden">
+                <img class="action-img" src="tick.png"/>
+            </div>
+
+            <div id="cross-cancel-entry-${entryID}" class="cross-button-div action-button-hidden">
+                <img class="action-img" src="cancel.png"/>
+            </div>
         </div>
     `;
 

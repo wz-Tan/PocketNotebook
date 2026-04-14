@@ -124,17 +124,29 @@ input {
   display: none;
 }
 
-.delete-button-div {
+.action-button-div {
   height: 14px;
   width: 14px;
   cursor: pointer;
   padding: 0 5px;
 }
 
-.delete-img {
+.cross-button-div {
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+  padding: 0 3px;
+}
+
+.action-button-div:hover,
+.cross-button-div:hover {
+  transform: scale(1.3);
+}
+
+.action-img {
   height: 100%;
   width: 100%;
-  object-fit: contain;
+  object-fit: fill;
 }
 
 .title-header-row {
