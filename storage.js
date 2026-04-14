@@ -20,7 +20,7 @@ async function getAllData() {
             return { id, title, description }
         })
 
-        return processedData
+        return processedData.reverse()
     }
     catch (error) {
         console.log("Error retrieving data", data)
