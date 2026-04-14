@@ -1,109 +1,113 @@
-*{
-    line-height: 1.6;
-    margin: 0;
+* {
+  line-height: 1.6;
+  margin: 0;
 }
 
-p{
-    line-height: 1.4;
+p {
+  line-height: 1.4;
 }
 
-h1{
-    font-size: 18px;
+h1 {
+  font-size: 18px;
 }
 
-h2, h3, p{
-    font-size: 14px;
+h2,
+h3,
+p {
+  font-size: 14px;
 }
 
-.test{
-    background-color: red;
+.test {
+  background-color: red;
 }
 
-.between{
-    justify-content: space-between;   
+.between {
+  justify-content: space-between;
 }
 
-.around{
-    justify-content: space-around;
+.around {
+  justify-content: space-around;
 }
 
-
-.rounded{
-    border-radius: 15px;
+.rounded {
+  border-radius: 15px;
 }
 
-.container{
-    padding: 10px;
-    width: 200px;
-    gap: 3px
+.container {
+  padding: 10px;
+  width: 200px;
+  gap: 3px;
 }
 
-.flex{
-    display: flex;
+.flex {
+  display: flex;
 }
 
-.flex-row{
-    flex-direction: row;
+.flex-row {
+  flex-direction: row;
 }
 
-.flex-col{
-    flex-direction: column;
+.flex-col {
+  flex-direction: column;
 }
 
-#addButton{
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 1.4;
+#addButton {
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
-#addButton:hover{
-    color: red;
+#addButton:hover {
+  color: red;
 }
 
-.searchBar{
-    padding: 2px 5px;
-    border-radius: 5px;
+.searchBar {
+  padding: 2px 5px;
+  border-radius: 5px;
 }
 
-.entry{
-    width: 100%;
-    gap: 2px;
-    border-bottom: 1px dotted gray;
+.entry {
+  width: 100%;
+  gap: 2px;
+  border-bottom: 1px dotted gray;
 }
 
 /* Adding Content Input Fields */
-input{
-    all:unset
+input {
+  all: unset;
 }
 
-.input-title{
-    font-size: 14px;
-    font-weight: 700;
-    width: 80%;
-    border: none;
+.input-title {
+  font-size: 14px;
+  font-weight: 700;
+  width: 80%;
+  border: none;
 }
 
-.input-description{
-    font-size: 14px;
-    width: 80%;
-    border: none;
+.input-description {
+  font-size: 14px;
+  width: 80%;
+  border: none;
 }
 
-.action-button-shown:hover,.action-button-hidden:hover{
-    cursor: pointer;
-    color: red;
+
+.action-button-shown:hover,
+.action-button-hidden:hover {
+  cursor: pointer;
+  color: red;
 }
 
-.action-button-shown, .action-button-hidden{
-    padding: 0px 5px;
+.action-button-shown,
+.action-button-hidden {
+  padding: 0px 5px;
 }
 
-.action-button-hidden{
-    visibility:hidden;
+.action-button-hidden {
+  visibility: hidden;
 }
 
-.warning{
-    color: red;
-    font-size: 12px;
-    display: none;
+.warning {
+  color: red;
+  font-size: 12px;
+  display: none;
 }

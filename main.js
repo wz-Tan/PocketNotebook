@@ -1,5 +1,4 @@
-// Map Data Onto Entry List
-const entryList = document.getElementById("entry-list");
+import storage from "./storage.js";
 
 // Structure: {id, title, description}
 let dataset = [
@@ -13,7 +12,12 @@ let currentTitle = "";
 let currentDescription = "";
 let newEntryID = null;
 
+storage.saveItem(1000, "Custom Title", "Custom Description")
+storage.getAllData()
+
 function MapData(provided_dataset) {
+    const entryList = document.getElementById("entry-list");
+
     // Clear Out The List Before Adding In
     entryList.innerHTML = ``;
 
@@ -36,7 +40,7 @@ function MapData(provided_dataset) {
         <!-- Entry Title with Garbage Icon -->
         <div class="title-header-row flex">
             <input id="input-title-${currentID}" class="input-title" type="text" placeholder="Enter Title" value="${key}"/>
-            <p id="trash-delete-entry-${currentID}" class="action-button">Delete</p>
+            <p id="trash-delete-entry-${currentID}" class="action-button-shown">Delete</p>
         </div>
 
         <!-- Description with Tick -->
@@ -103,8 +107,6 @@ addButton.addEventListener("click", () => {
     // Unique ID
     const entryID = Date.now() + Math.random();
     newEntryID = entryID;
-
-    console.log("New entry Id is ", entryID)
 
     // Reset the Text, Buttons, Warnings on A Prior Edit (If Any)
     if (currentFocus !== undefined && currentFocus !== entryID) {
@@ -302,7 +304,6 @@ function showActionButtons(id) {
 
 // Reset The Previously Focused Item (Action Bar and Errors) - Reset Description and Title unless its a new Entry
 function resetPreviousEditTarget(id) {
-    console.log("The previous target ID is, ", id)
 
     const confirmButton = document.getElementById(`tick-confirm-entry-${id}`);
     const cancelButton = document.getElementById(`cross-cancel-entry-${id}`);
