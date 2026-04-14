@@ -36,7 +36,7 @@ function MapData(provided_dataset) {
         <!-- Entry Title with Garbage Icon -->
         <div class="title-header-row flex">
             <input id="input-title-${currentID}" class="input-title" type="text" placeholder="Enter Title" value="${key}"/>
-            <p id="trash-delete-entry-${currentID}" class="action-button">Trash</p>
+            <p id="trash-delete-entry-${currentID}" class="action-button">Delete</p>
         </div>
 
         <!-- Description with Tick -->
@@ -100,9 +100,11 @@ MapData(dataset);
 const addButton = document.getElementById("addButton");
 
 addButton.addEventListener("click", () => {
-    // Assign ID 0 for New Entry (TODO: Generate a Unique One Instead)
-    const entryID = 0;
+    // Unique ID
+    const entryID = Date.now() + Math.random();
     newEntryID = entryID;
+
+    console.log("New entry Id is ", entryID)
 
     // Reset the Text, Buttons, Warnings on A Prior Edit (If Any)
     if (currentFocus !== undefined && currentFocus !== entryID) {
@@ -162,6 +164,7 @@ addButton.addEventListener("click", () => {
             MapData(dataset);
 
             resetAddEntry(entryID);
+            currentFocus = undefined;
         }
     });
 
@@ -309,8 +312,14 @@ function resetPreviousEditTarget(id) {
         const titleEntry = document.getElementById(`input-title-${id}`)
         const descriptionEntry = document.getElementById(`input-description-${id}`)
 
-        titleEntry.value = currentTitle
-        descriptionEntry.value = currentDescription
+        if (currentTitle) {
+            titleEntry.value = currentTitle
+        }
+
+        if (currentDescription) {
+            descriptionEntry.value = currentDescription
+        }
+
     }
 
 
