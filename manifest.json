@@ -2,12 +2,23 @@
   "manifest_version": 3,
   "name": "Pocket Notebook",
   "version": "1.0.0",
-  "description": "An extension that stores key-pair values locally on your device. Save words with their meanings, people with their birthdays - it's a handy pocket notebook!",
+  "description": "The simplest way to remember things. No accounts, no cloud, no clutter — just a lightweight notebook that lives in your browser.",
   "action": {
     "default_popup": "index.html",
-    "default_icon": "icon.png"
+    "default_icons": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   },
-  "permissions":[
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
     "storage"
   ]
 }
